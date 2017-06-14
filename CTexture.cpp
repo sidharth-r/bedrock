@@ -9,10 +9,10 @@ CTexture::CTexture()
 CTexture::CTexture(SDL_Renderer* r, int w, int h)
 {
 	gRenderer = r;
-	//mWidth = w;
-	//mHeight = h;
+	mWidth = w;
+	mHeight = h;
 	mTexture = NULL;
-	renderQuad = { 0, 0, w, h };
+	renderQuad = { 0, 0, 0, 0 };
 }
 
 CTexture::~CTexture()
@@ -47,14 +47,19 @@ void CTexture::free()
 
 void CTexture::render(int x, int y, SDL_Rect* clip)
 {
-	renderQuad.x = x;
-	renderQuad.y = y;
+	offsetXY(x, y);
 	
 	SDL_RenderCopy(gRenderer, mTexture, NULL, &renderQuad);
 }
 
-void CTexture::resizeQuad(int w, int h)
+void CTexture::resizeQuad(double scale)
 {
-	renderQuad.w = w;
-	renderQuad.h = h;
+	renderQuad.w = mWidth * scale;
+	renderQuad.h = mHeight * scale;
+}
+
+void CTexture::offsetXY(int x, int y)
+{
+	renderQuad.x = x - renderQuad.w / 2;
+	renderQuad.y = y - renderQuad.h / 2;
 }

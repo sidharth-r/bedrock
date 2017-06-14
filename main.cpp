@@ -55,7 +55,7 @@ double planeX = 0, planeY = 1;
 double time = 0, timeOld = 0;
 */
 
-SFrameInfo gFrameInfo = { { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 0, 0 };
+SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 0, 0 };
 
 using namespace vmath;
 
@@ -149,6 +149,23 @@ int main(int argc, char ** argv)
 					gFrameInfo.plane.x = gFrameInfo.plane.x * cos(rotSpeed) - gFrameInfo.plane.y * sin(rotSpeed);
 					gFrameInfo.plane.y = oldPlaneX * sin(rotSpeed) + gFrameInfo.plane.y * cos(rotSpeed);
 				}
+#ifdef DEBUG
+				if (sdlEvt.key.keysym.sym == SDLK_d)
+				{
+					printf_s("Player pos		: x: %f y: %f\n", gFrameInfo.pos.x, gFrameInfo.pos.y);
+					printf_s("Player dir		: x: %f y: %f\n", gFrameInfo.dir.x, gFrameInfo.dir.y);
+					printf_s("Plane				: x: %f y: %f\n", gFrameInfo.plane.x, gFrameInfo.plane.y);
+					printf_s("Clip angle 		: %f\n", gFrameInfo.clipAngle);
+					printf_s("-------------------------------------\n");
+					printf_s("Actor:\n");
+					printf_s("Pos				: x: %f y: %f\n", en1.pos.x, en1.pos.y);
+					en1.debugVars();
+					printf_s("-------------------------------------\n");
+					printf_s("Texture:\n");
+					printf_s("renderQuad pos	: x: %f y: %f\n", en1.texture->renderQuad.x, en1.texture->renderQuad.y);
+					printf_s("renderQuad size	: w: %f h: %f\n", en1.texture->renderQuad.w, en1.texture->renderQuad.h);
+				}
+#endif
 			}
 		}
 
@@ -368,7 +385,8 @@ bool loadData(char* mapFile)
 				j++;
 			}
 		}
-
+		
+		/*
 		for (i = 0; i < rows; i++)
 		{
 			for (int j = 0; j < cols; j++)
@@ -376,7 +394,7 @@ bool loadData(char* mapFile)
 				printf_s("%d ", wMap[i][j]);
 			}
 			printf_s("\n");
-		}
+		}*/
 
 		fclose(map);
 	}

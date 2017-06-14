@@ -8,7 +8,7 @@ public:
 	SDL_Renderer* gRenderer;
 	SDL_Texture* mTexture;
 	SDL_Rect renderQuad;
-	//int mWidth, mHeight;
+	int mWidth, mHeight;
 
 public:
 	CTexture();
@@ -17,5 +17,6 @@ public:
 	bool loadFromFile(char*);
 	void free();
 	void render(int, int, SDL_Rect* clip = NULL);
-	void resizeQuad(int, int);
+	void resizeQuad(double scale);
+	void offsetXY(int, int);
 };

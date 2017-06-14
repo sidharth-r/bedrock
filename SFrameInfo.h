@@ -11,6 +11,7 @@ struct SFrameInfo
 
 struct SFrameInfo
 {
+	int sWidth, sHeight;
 	vmath::vec2d pos, dir, plane;
 	double clipAngle, time, timeOld;
 };

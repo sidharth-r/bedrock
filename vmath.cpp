@@ -37,6 +37,11 @@ double vmath::angle(vec2d a, vec2d b)
 	//return acos((a * b) / (magnitude(a) * magnitude(b)));
 }
 
+double vmath::angle_raw(vec2d a, vec2d b)
+{
+	return acos((a * b) / (magnitude(a) * magnitude(b)));
+}
+
 vmath::vec2d vmath::normalize(vec2d a)
 {
 	return vec2d{ a.x / magnitude(a), a.y / magnitude(a) };
