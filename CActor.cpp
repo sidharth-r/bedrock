@@ -1,7 +1,7 @@
 #include "CActor.h"
 #include <math.h>
 
-CActor::CActor(SFrameInfo* f,CTexture* tex, int a, int b)
+CActor::CActor(SFrameInfo* f,CTexture* tex , int a, int b)
 {
 	FrameInfo = f;
 	texture = tex;
@@ -13,10 +13,6 @@ CActor::~CActor()
 {
 }
 
-#ifdef DEBUG
-#include <stdio.h>
-#endif
-
 void CActor::draw()
 {
 	vmath::vec2d v = pos - FrameInfo->pos;
@@ -24,7 +20,7 @@ void CActor::draw()
 	double magDir = vmath::magnitude(FrameInfo->dir);
 
 	double angle = vmath::angle(v, FrameInfo->dir);
-#ifdef DEBUG
+#ifdef _DEBUG
 	tAngle = angle;
 #endif
 
@@ -41,7 +37,7 @@ void CActor::draw()
 	//double diffZ = (pos * FrameInfo->plane) * tan(vmath::angle_raw(pos, FrameInfo->plane));
 	//double scale = magDir / diffZ;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	/*double p1 = pos * FrameInfo->plane;
 	printf_s("\npos*plane			: %f\n", p1);
 	printf_s("angle()			: %f\n", vmath::angle(pos, FrameInfo->plane));
@@ -53,7 +49,7 @@ void CActor::draw()
 	diffZ < 1 ? 1 : diffZ;
 	double scale = 1 / diffZ;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	tScale = scale;
 #endif
 
@@ -62,7 +58,7 @@ void CActor::draw()
 	texture->render(screenX,screenY);
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 void CActor::debugVars()
 {
 	printf_s("Angle				: %f\n", tAngle);

@@ -3,12 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <thread>
 #include <vector>
 
 #include "CActor.h"
+#include "CEnemy.h"
+#include "CPlayer.h"
 #include "SFrameInfo.h"
 #include "vmath.h"
-
 
 #define SCREEN_H 600
 #define SCREEN_W 800
@@ -22,6 +24,7 @@ void drawFrame();
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 CTexture* gSpriteEn;
+CTexture* gSpriteEn2;
 
 struct __structColor
 {
@@ -55,7 +58,9 @@ double planeX = 0, planeY = 1;
 double time = 0, timeOld = 0;
 */
 
-SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 0, 0 };
+SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 0, 0, 0 };
+
+CPlayer gPlayer;
 
 using namespace vmath;
 
@@ -90,7 +95,11 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	CActor en1(&gFrameInfo, gSpriteEn, 5, 5);
+	CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
+	CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
+
+	//std::thread procEn1(&CEnemy::process, &en1, &gPlayer);
+	//std::thread procEn2(&CEnemy::process, &en2, &gPlayer);
 
 	bool fQuit = false;
 	SDL_Event sdlEvt;
@@ -102,14 +111,25 @@ int main(int argc, char ** argv)
 
 		drawFrame();
 		en1.draw();
+		en2.draw();
+
+		if (gPlayer.getHealth() <= 0)
+		{
+			SDL_SetRenderDrawColor(gRenderer, Color.red.r / 2, Color.red.g, Color.red.b, Color.red.a);
+			SDL_RenderClear(gRenderer);
+		}
 
 		SDL_RenderPresent(gRenderer);
 
+		
+		en1.process(&gPlayer,wMap);
+		en2.process(&gPlayer,wMap);
+
 		gFrameInfo.timeOld = gFrameInfo.time;
 		gFrameInfo.time = SDL_GetTicks();
-		double frameTime = (gFrameInfo.time - gFrameInfo.timeOld) / 1000.0;
-		double moveSpeed = frameTime * 1.5;
-		double rotSpeed = frameTime * 3.0;
+		gFrameInfo.frameTime = (gFrameInfo.time - gFrameInfo.timeOld) / 1000.0;
+		double moveSpeed = gFrameInfo.frameTime * 1.5;
+		double rotSpeed = gFrameInfo.frameTime * 3.0;
 
 		while (SDL_PollEvent(&sdlEvt) != 0)
 		{
@@ -149,7 +169,7 @@ int main(int argc, char ** argv)
 					gFrameInfo.plane.x = gFrameInfo.plane.x * cos(rotSpeed) - gFrameInfo.plane.y * sin(rotSpeed);
 					gFrameInfo.plane.y = oldPlaneX * sin(rotSpeed) + gFrameInfo.plane.y * cos(rotSpeed);
 				}
-#ifdef DEBUG
+#ifdef _DEBUG
 				if (sdlEvt.key.keysym.sym == SDLK_d)
 				{
 					printf_s("Player pos		: x: %f y: %f\n", gFrameInfo.pos.x, gFrameInfo.pos.y);
@@ -171,6 +191,9 @@ int main(int argc, char ** argv)
 
 		SDL_Delay(17);
 	}
+
+	//procEn1.join();
+	//procEn2.join();
 	
 	quit();
 	return 0;
@@ -326,14 +349,17 @@ bool init()
 		return false;
 	}
 
-	gSpriteEn = new CTexture(gRenderer, 512, 512);
-
 	return true;
 }
 
 bool loadData(char* mapFile)
 {
+	gSpriteEn = new CTexture(gRenderer, 512, 512);
 	if (!gSpriteEn->loadFromFile("en.png"))
+		return false;
+
+	gSpriteEn2 = new CTexture(gRenderer, 512, 512);
+	if (!gSpriteEn2->loadFromFile("en2.png"))
 		return false;
 
 	FILE* map = NULL;

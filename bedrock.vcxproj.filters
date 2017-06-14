@@ -30,6 +30,15 @@
     <ClCompile Include="vmath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CEnemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rmath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CTexture.h">
@@ -41,10 +50,19 @@
     <ClInclude Include="CActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CEnemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="SFrameInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmath.h">
+    <ClInclude Include="CPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rmath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

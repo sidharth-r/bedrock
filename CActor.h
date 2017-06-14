@@ -5,7 +5,7 @@
 
 class CActor : public CEntity
 {
-#ifdef DEBUG
+#ifdef _DEBUG
 	double tAngle, tScale;
 #endif
 public:
@@ -13,7 +13,7 @@ public:
 	CActor(SFrameInfo*,CTexture*,int,int);
 	~CActor();
 	void draw();
-#ifdef DEBUG
+#ifdef _DEBUG
 	void debugVars();
 #endif
 };

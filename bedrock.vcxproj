@@ -77,15 +77,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CActor.cpp" />
+    <ClCompile Include="CEnemy.cpp" />
+    <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rmath.cpp" />
     <ClCompile Include="vmath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CActor.h" />
+    <ClInclude Include="CEnemy.h" />
     <ClInclude Include="CEntity.h" />
+    <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CTexture.h" />
+    <ClInclude Include="rmath.h" />
     <ClInclude Include="SFrameInfo.h" />
     <ClInclude Include="vmath.h" />
   </ItemGroup>

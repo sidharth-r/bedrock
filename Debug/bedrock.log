@@ -1,20 +1,20 @@
-﻿Build started 14-Jun-17 12:22:23 PM.
+﻿Build started 14-Jun-17 5:06:36 PM.
      1>Project "D:\Local Disk E\Software\Visual Studio Projects\bedrock\bedrock\bedrock.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Local Disk E\Software\Visual Studio Express 2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt CActor.cpp main.cpp
-         main.cpp
-         CActor.cpp
-     1>d:\local disk e\software\visual studio projects\bedrock\bedrock\cactor.cpp(39): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-         Generating Code...
+         D:\Local Disk E\Software\Visual Studio Express 2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt CEnemy.cpp
+         CEnemy.cpp
        Link:
          D:\Local Disk E\Software\Visual Studio Express 2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.exe" /INCREMENTAL /NOLOGO /LIBPATH:"D:\Local Disk E\Software\Visual Studio Projects\SDL2_ttf-devel-2.0.14-VC\lib\x86" /LIBPATH:"D:\Local Disk E\Software\Visual Studio Projects\SDL2_image-devel-2.0.1-VC\lib\x86" /LIBPATH:"D:\Local Disk E\Software\Visual Studio Projects\SDL2-devel-2.0.4-VC\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.lib" /MACHINE:X86 Debug\CActor.obj
+         Debug\CEnemy.obj
+         Debug\CPlayer.obj
          Debug\CTexture.obj
          Debug\CEntity.obj
          Debug\main.obj
+         Debug\rmath.obj
          Debug\vmath.obj
          bedrock.vcxproj -> D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.exe
      1>Done Building Project "D:\Local Disk E\Software\Visual Studio Projects\bedrock\bedrock\bedrock.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.40
+Time Elapsed 00:00:00.97
