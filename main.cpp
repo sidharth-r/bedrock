@@ -50,24 +50,14 @@ std::vector<std::vector<int>> wMap, wMap_fallback = {
 	{ 1, 5, 6, 7, 1 }
 };
 
-/*
-double posX = 4, posY = 3;
-double dirX = -1, dirY = 0;
-double planeX = 0, planeY = 1;
-
-double time = 0, timeOld = 0;
-*/
-
 SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 0, 0, 0 };
 
-CPlayer gPlayer;
+CPlayer gPlayer(&gFrameInfo);
 
 using namespace vmath;
 
 int main(int argc, char ** argv)
 {
-	//double magDir = sqrt(gFrameInfo.dirY * gFrameInfo.dirY + gFrameInfo.dirX * gFrameInfo.dirX);
-	//double magPlane = sqrt(gFrameInfo.planeX * gFrameInfo.planeX + gFrameInfo.planeY * gFrameInfo.planeY);
 	double magDir = magnitude(gFrameInfo.dir);
 	double magPlane = magnitude(gFrameInfo.plane);
 	gFrameInfo.clipAngle = atan(magPlane / magDir);
@@ -97,9 +87,6 @@ int main(int argc, char ** argv)
 
 	CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
 	CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
-
-	//std::thread procEn1(&CEnemy::process, &en1, &gPlayer);
-	//std::thread procEn2(&CEnemy::process, &en2, &gPlayer);
 
 	bool fQuit = false;
 	SDL_Event sdlEvt;
@@ -133,6 +120,13 @@ int main(int argc, char ** argv)
 
 		while (SDL_PollEvent(&sdlEvt) != 0)
 		{
+			if (sdlEvt.type == SDL_MOUSEBUTTONDOWN)
+			{
+				if (sdlEvt.button.button == SDL_BUTTON_LEFT)
+				{
+					gPlayer.attack();
+				}
+			}
 			if (sdlEvt.type = SDL_KEYDOWN)
 			{
 				if (sdlEvt.key.keysym.sym == SDLK_ESCAPE)
@@ -169,7 +163,7 @@ int main(int argc, char ** argv)
 					gFrameInfo.plane.x = gFrameInfo.plane.x * cos(rotSpeed) - gFrameInfo.plane.y * sin(rotSpeed);
 					gFrameInfo.plane.y = oldPlaneX * sin(rotSpeed) + gFrameInfo.plane.y * cos(rotSpeed);
 				}
-#ifdef _DEBUG
+//dbg
 				if (sdlEvt.key.keysym.sym == SDLK_d)
 				{
 					printf_s("Player pos		: x: %f y: %f\n", gFrameInfo.pos.x, gFrameInfo.pos.y);
@@ -185,15 +179,12 @@ int main(int argc, char ** argv)
 					printf_s("renderQuad pos	: x: %f y: %f\n", en1.texture->renderQuad.x, en1.texture->renderQuad.y);
 					printf_s("renderQuad size	: w: %f h: %f\n", en1.texture->renderQuad.w, en1.texture->renderQuad.h);
 				}
-#endif
+//dbg
 			}
 		}
 
 		SDL_Delay(17);
 	}
-
-	//procEn1.join();
-	//procEn2.join();
 	
 	quit();
 	return 0;
@@ -201,6 +192,8 @@ int main(int argc, char ** argv)
 
 void drawFrame()
 {
+	int zBuf[SCREEN_W];
+
 	for (int x = 0; x < SCREEN_W; x++)
 	{
 		double cameraX = 2 * x / double(SCREEN_W) - 1;
@@ -268,12 +261,14 @@ void drawFrame()
 		else
 			perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
 
-		int lineHeight = (int)(SCREEN_H/ perpWallDist);
+		zBuf[x] = perpWallDist;
 
-		int lStart = -lineHeight / 2 + SCREEN_H/ 2;
+		int lineHeight = (int)(SCREEN_H / perpWallDist);
+
+		int lStart = -lineHeight / 2 + SCREEN_H / 2;
 		if (lStart <= 0)
 			lStart = 1;
-		int lEnd = lineHeight / 2 + SCREEN_H/ 2;
+		int lEnd = lineHeight / 2 + SCREEN_H / 2;
 		if (lEnd >= SCREEN_H)
 			lEnd = SCREEN_H;
 		
@@ -323,13 +318,6 @@ void drawFrame()
 		SDL_SetRenderDrawColor(gRenderer, colorFloor.r, colorFloor.g, colorFloor.b, colorFloor.a);
 		SDL_RenderDrawLine(gRenderer, x, lEnd, x, SCREEN_H);
 	}
-
-	//double cameraX = 2 * rSpriteEn.x / double(SCREEN_W) - 1;
-	//double rayDirX = gFrameInfo.dirX + gFrameInfo.planeX * cameraX;
-	//double rayDirY = gFrameInfo.dirY + gFrameInfo.planeY * cameraX;
-	//double perpSpriteDist = (rSpriteEn.x - gFrameInfo.posX) / rayDirX;
-
-	//gSpriteEn->render(200, 200);
 }
 
 bool init()
@@ -342,6 +330,7 @@ bool init()
 
 	if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)
 		return false;
+	SDL_SetWindowGrab(gWindow, SDL_TRUE);
 
 	if (!IMG_Init(IMG_INIT_PNG))
 	{
@@ -411,16 +400,6 @@ bool loadData(char* mapFile)
 				j++;
 			}
 		}
-		
-		/*
-		for (i = 0; i < rows; i++)
-		{
-			for (int j = 0; j < cols; j++)
-			{
-				printf_s("%d ", wMap[i][j]);
-			}
-			printf_s("\n");
-		}*/
 
 		fclose(map);
 	}
@@ -428,17 +407,19 @@ bool loadData(char* mapFile)
 	{
 		wMap = wMap_fallback;
 	}
+
 	return true;
 }
 
 void quit()
 {
-	//SDL_FreeSurface(gSurface);
-	//gSurface = NULL;
-
 	gSpriteEn->free();
 	delete gSpriteEn;
 	gSpriteEn = NULL;
+
+	gSpriteEn2->free();
+	delete gSpriteEn2;
+	gSpriteEn2 = NULL;
 
 	SDL_DestroyRenderer(gRenderer);
 	gRenderer = NULL;

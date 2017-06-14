@@ -24,8 +24,6 @@ void CActor::draw()
 	tAngle = angle;
 #endif
 
-	//double a = vmath::angle({ 0, -4 }, { -1, -3 }), b = vmath::angle({ 0, -4 }, { 1, -3 });
-
 	if (angle > FrameInfo->clipAngle)
 		return;
 
@@ -33,9 +31,6 @@ void CActor::draw()
 
 	int screenY = FrameInfo->sHeight / 2;
 	int screenX = (camX + 1) * FrameInfo->sWidth / 2;
-	
-	//double diffZ = (pos * FrameInfo->plane) * tan(vmath::angle_raw(pos, FrameInfo->plane));
-	//double scale = magDir / diffZ;
 
 #ifdef _DEBUG
 	/*double p1 = pos * FrameInfo->plane;

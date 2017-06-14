@@ -23,18 +23,9 @@ double vmath::magnitude(vec2d a)
 
 double vmath::angle(vec2d a, vec2d b)
 {
-	/*a = normalize(a);
-	b = normalize(b);
-	double d = a * b;
-	if (d < -1.0)
-		d = -1.0;
-	else if (d > 1.0)
-		d = 1.0;
-	return acos(d);*/
 	double d = a * b;
 	double det = a.x * b.y - b.x * a.y;
 	return atan2(det, d);
-	//return acos((a * b) / (magnitude(a) * magnitude(b)));
 }
 
 double vmath::angle_raw(vec2d a, vec2d b)

@@ -1,9 +1,12 @@
 #include "CPlayer.h"
 
+#include <stdio.h>
 
-CPlayer::CPlayer()
+CPlayer::CPlayer(SFrameInfo* f)
 {
+	frameInfo = f;
 	health = 100;
+	attTimer = 0;
 }
 
 
@@ -19,4 +22,13 @@ int CPlayer::getHealth()
 void CPlayer::applyDamage(int d)
 {
 	health -= d;
+}
+
+void CPlayer::attack()
+{
+	if (frameInfo->time - attTimer > 700)
+	{
+		attTimer = frameInfo->time;
+		printf_s("att");
+	}
 }
