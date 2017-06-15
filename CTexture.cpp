@@ -105,12 +105,12 @@ SDL_Color CTexture::sampleTexture(int x, int y)
 
 	if (a > 0 && a < 255)
 	{
-		printf_s("alpha");
+		printf_s("invalpha");
 	}
 
 	if ((r > 0 || g > 0 || b > 0) && a == 255)
 	{
-		printf_s("col");
+		printf_s("colhit");
 	}
 
 	col = { r, g, b, a };

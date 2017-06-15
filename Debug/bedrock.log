@@ -1,4 +1,4 @@
-﻿Build started 15-Jun-17 7:52:44 PM.
+﻿Build started 15-Jun-17 8:33:49 PM.
      1>Project "D:\Local Disk E\Software\Visual Studio Projects\bedrock\bedrock\bedrock.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Local Disk E\Software\Visual Studio Express 2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -18,4 +18,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.93
+Time Elapsed 00:00:00.74

@@ -384,7 +384,8 @@ void drawFrame()
 
 		for (int str = startX; str < endX; str++)
 		{
-			int tX = int(256 * (str - (sprScreenX - sprW / 2) * TEX_WIDTH / sprW)) / 256;
+			//int tX = int(256 * (str - (sprScreenX - sprW / 2) * TEX_WIDTH / sprW)) / 256;
+			int tX = int((str - (sprScreenX - sprW / 2)) * TEX_WIDTH / double(sprW));
 
 			if (transform.y <= zBuf[str] && transform.y > 0)
 			{
