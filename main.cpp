@@ -16,6 +16,9 @@
 #define SCREEN_W 800
 #define G_TITLE "bedrock"
 
+#define TEX_WIDTH 256
+#define TEX_HEIGHT 256
+
 bool init();
 bool loadData(char* mapFile = NULL);
 void quit();
@@ -54,6 +57,9 @@ SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 
 
 CPlayer gPlayer(&gFrameInfo);
 
+CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
+CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
+
 using namespace vmath;
 
 int main(int argc, char ** argv)
@@ -85,20 +91,31 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
-	CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
+	CEnemy e1(&gFrameInfo, gSpriteEn, 6, 5);
+	en1 = e1;
+	CEnemy e2(&gFrameInfo, gSpriteEn2, 5, 2);
+	en2 = e2;
 
 	bool fQuit = false;
 	SDL_Event sdlEvt;
 
+	SDL_Window* w2 = SDL_CreateWindow("2", 200, 200, 300, 300, 0);
+	SDL_Surface* s = SDL_LoadBMP("ena.bmp");
+
 	while (!fQuit)
 	{
+		if (SDL_BlitSurface(en1.texture->mSurface, NULL, SDL_GetWindowSurface(w2), NULL) != 0)
+		{
+			printf_s("%s\n", SDL_GetError());
+		}
+		SDL_UpdateWindowSurface(w2);
+
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL_RenderClear(gRenderer);
 
 		drawFrame();
 		en1.draw();
-		en2.draw();
+		//en2.draw();
 
 		if (gPlayer.getHealth() <= 0)
 		{
@@ -109,8 +126,8 @@ int main(int argc, char ** argv)
 		SDL_RenderPresent(gRenderer);
 
 		
-		en1.process(&gPlayer,wMap);
-		en2.process(&gPlayer,wMap);
+		//en1.process(&gPlayer,wMap);
+		//en2.process(&gPlayer,wMap);
 
 		gFrameInfo.timeOld = gFrameInfo.time;
 		gFrameInfo.time = SDL_GetTicks();
@@ -318,6 +335,76 @@ void drawFrame()
 		SDL_SetRenderDrawColor(gRenderer, colorFloor.r, colorFloor.g, colorFloor.b, colorFloor.a);
 		SDL_RenderDrawLine(gRenderer, x, lEnd, x, SCREEN_H);
 	}
+
+	int numSprites = 2;
+	int sprOrder[2];
+	double sprZ[2];
+	CEnemy* sprite[2] = { &en1, &en2 };
+
+	for (int i = 0; i < numSprites; i++)
+	{
+		sprOrder[i] = i;
+		sprZ[i] = magnitude(gFrameInfo.pos - sprite[i]->pos);
+	}
+
+	//sort
+	
+	for (int i = 0; i < numSprites; i++)
+	{
+		vec2d dir = gFrameInfo.dir, plane = gFrameInfo.plane, pos = gFrameInfo.pos;
+
+		vec2d spr = sprite[sprOrder[i]]->pos - pos;
+
+		double invDet = 1 / (plane.x * dir.y - plane.y * dir.x);
+
+		vec2d transform = { invDet * (dir.y * spr.x - dir.x * spr.y), invDet * (plane.x * spr.y - plane.y * spr.x) };
+
+		int sprScreenX = int((SCREEN_W / 2) * (1 + transform.x / transform.y));
+		
+		int sprH = abs(int(SCREEN_H / transform.y));
+		int startY = SCREEN_H / 2 - sprH / 2;
+		if (startY < 0)
+			startY = 0;
+		int endY = SCREEN_H / 2 + sprH / 2;
+		if (endY >= SCREEN_H)
+			endY = SCREEN_H - 1;
+
+		int sprW = abs(int(SCREEN_H / transform.y));
+		int startX = sprScreenX - sprW / 2;
+		if (startX < 0)
+			startX = 0;
+		int endX = sprScreenX + sprW / 2;
+		if (endX >= SCREEN_W)
+			endX = SCREEN_W - 1;
+
+		if (i == 0 && transform.y > 0)
+		{
+			//printf_s("sfsf");
+		}
+
+		for (int str = startX; str < endX; str++)
+		{
+			int tX = int(256 * (str - (sprScreenX - sprW / 2) * TEX_WIDTH / sprW)) / 256;
+
+			if (transform.y <= zBuf[str] && transform.y > 0)
+			{
+				//printf_s("%d", str);
+			}
+
+			if (transform.y > 0 && str > 0 && str < SCREEN_W && transform.y < zBuf[str])
+			{
+				for (int y = startY; y < endY; y++)
+				{
+					int t = y * 256 - SCREEN_H * 128 + sprH * 128;
+					int tY = ((t * TEX_HEIGHT) / sprH) / 256;
+					SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
+					//col = { 255, 255, 255, 255 };
+					SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
+					SDL_RenderDrawPoint(gRenderer, str, y);
+				}
+			}
+		}
+	}
 }
 
 bool init()
@@ -343,12 +430,13 @@ bool init()
 
 bool loadData(char* mapFile)
 {
-	gSpriteEn = new CTexture(gRenderer, 512, 512);
+	SDL_PixelFormat* f = SDL_GetWindowSurface(gWindow)->format;
+	gSpriteEn = new CTexture(gRenderer, f, 256, 256);
 	if (!gSpriteEn->loadFromFile("en.png"))
 		return false;
 
-	gSpriteEn2 = new CTexture(gRenderer, 512, 512);
-	if (!gSpriteEn2->loadFromFile("en2.png"))
+	gSpriteEn2 = new CTexture(gRenderer, f, 256, 256);
+	if (!gSpriteEn2->loadFromFile("en.png"))
 		return false;
 
 	FILE* map = NULL;
@@ -413,11 +501,9 @@ bool loadData(char* mapFile)
 
 void quit()
 {
-	gSpriteEn->free();
 	delete gSpriteEn;
 	gSpriteEn = NULL;
 
-	gSpriteEn2->free();
 	delete gSpriteEn2;
 	gSpriteEn2 = NULL;
 
