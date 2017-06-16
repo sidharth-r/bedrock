@@ -60,6 +60,96 @@ CPlayer gPlayer(&gFrameInfo);
 CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
 CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
 
+bool f = false;
+/*
+void draw(SDL_Surface* mSurface, SDL_Window* w3, SDL_Renderer* r3)
+{
+	if (f == false)
+	{
+		for (int x = 0; x < 256; x++)
+		{
+			int y = 230;
+			if (SDL_LockSurface(mSurface) == -1)
+			{
+				printf_s("ERROR: Could not lock surface.");
+				return;
+			}
+			int bpp = mSurface->format->BytesPerPixel;
+			if (bpp != 4)
+				printf_s("WARNING: Surface is not 32bpp.\n");
+
+			Uint8* px = (Uint8*)mSurface->pixels + y * mSurface->pitch + x * bpp;
+			Uint32 p = *(Uint32*)px;
+			SDL_UnlockSurface(mSurface);
+			
+			printf_s("|%d|", p);
+		}
+		f = true;
+	}
+
+
+	for (int x = 0; x < 256; x++)
+	{
+		for (int y = 0; y < 256; y++)
+		{
+			SDL_Color col = { 0, 0, 0, 255 };
+
+			if (SDL_LockSurface(mSurface) == -1)
+			{
+				printf_s("ERROR: Could not lock surface.");
+				return;
+			}
+			int bpp = mSurface->format->BytesPerPixel;
+			if (bpp != 4)
+				printf_s("WARNING: Surface is not 32bpp.\n");
+
+			Uint8* px = (Uint8*)mSurface->pixels + y * mSurface->pitch + x * bpp;
+			Uint32 p = *(Uint32*)px;
+			SDL_UnlockSurface(mSurface);
+			
+			Uint8 r, g, b, a;
+			SDL_PixelFormat* format = mSurface->format;
+			Uint32 temp = p & format->Rmask;
+			temp = temp >> format->Rshift;
+			temp = temp << format->Rloss;
+			r = (Uint8)temp;
+			temp = p & format->Gmask;
+			temp = temp >> format->Gshift;
+			temp = temp << format->Gloss;
+			g = (Uint8)temp;
+			temp = p & format->Bmask;
+			temp = temp >> format->Bshift;
+			temp = temp << format->Bloss;
+			b = (Uint8)temp;
+			temp = p & format->Amask;
+			temp = temp >> format->Ashift;
+			temp = temp << format->Aloss;
+			a = (Uint8)temp;
+
+			SDL_GetRGBA(p, format, &r, &g, &b, &a);
+
+			if (a > 0 && a < 255)
+			{
+				printf_s("invalpha");
+			}
+
+			if ((r > 0 || g > 0 || b > 0) && a == 255)
+			{
+				printf_s("colhit");
+			}
+
+			col = { r, g, b, a };
+
+			SDL_SetRenderDrawColor(r3, r, g, b, a);
+			SDL_RenderDrawPoint(r3, x, y);
+
+		}
+	}
+	SDL_RenderPresent(r3);
+	
+}
+*/
+
 using namespace vmath;
 
 int main(int argc, char ** argv)
@@ -99,22 +189,31 @@ int main(int argc, char ** argv)
 	bool fQuit = false;
 	SDL_Event sdlEvt;
 
-	SDL_Window* w2 = SDL_CreateWindow("2", 200, 200, 300, 300, 0);
-	SDL_Surface* s = SDL_LoadBMP("ena.bmp");
+	//SDL_Window* w2 = SDL_CreateWindow("2", 200, 200, 256, 256, 0);
+	//SDL_Surface* s = SDL_LoadBMP("ena.bmp");
+
+	SDL_Window* w3;
+	SDL_Renderer* r3;
+
+	//w3 = SDL_CreateWindow("3", 200, 800, 257, 257, 0);
+	//SDL_CreateWindowAndRenderer(257, 257, NULL, &w3, &r3);
 
 	while (!fQuit)
 	{
+		/*
 		if (SDL_BlitSurface(en1.texture->mSurface, NULL, SDL_GetWindowSurface(w2), NULL) != 0)
 		{
 			printf_s("%s\n", SDL_GetError());
 		}
 		SDL_UpdateWindowSurface(w2);
 
+		draw(en1.texture->mSurface,w3,r3);*/
+
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL_RenderClear(gRenderer);
 
 		drawFrame();
-		en1.draw();
+		//en1.draw();
 		//en2.draw();
 
 		if (gPlayer.getHealth() <= 0)
@@ -400,8 +499,11 @@ void drawFrame()
 					int tY = ((t * TEX_HEIGHT) / sprH) / 256;
 					SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
 					//col = { 255, 255, 255, 255 };
-					SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
-					SDL_RenderDrawPoint(gRenderer, str, y);
+					if (col.a > 0)
+					{
+						SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
+						SDL_RenderDrawPoint(gRenderer, str, y);
+					}
 				}
 			}
 		}
@@ -431,12 +533,11 @@ bool init()
 
 bool loadData(char* mapFile)
 {
-	SDL_PixelFormat* f = SDL_GetWindowSurface(gWindow)->format;
-	gSpriteEn = new CTexture(gRenderer, f, 256, 256);
-	if (!gSpriteEn->loadFromFile("en.png"))
+	gSpriteEn = new CTexture(gRenderer, 256, 256);
+	if (!gSpriteEn->loadFromFile("en4.png"))
 		return false;
 
-	gSpriteEn2 = new CTexture(gRenderer, f, 256, 256);
+	gSpriteEn2 = new CTexture(gRenderer, 256, 256);
 	if (!gSpriteEn2->loadFromFile("en.png"))
 		return false;
 

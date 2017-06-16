@@ -1,9 +1,11 @@
-﻿Build started 15-Jun-17 8:33:49 PM.
+﻿Build started 16-Jun-17 12:29:37 PM.
      1>Project "D:\Local Disk E\Software\Visual Studio Projects\bedrock\bedrock\bedrock.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Local Disk E\Software\Visual Studio Express 2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>d:\local disk e\software\visual studio projects\bedrock\bedrock\main.cpp(281): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>d:\local disk e\software\visual studio projects\bedrock\bedrock\main.cpp(195): warning C4101: 'w3' : unreferenced local variable
+     1>d:\local disk e\software\visual studio projects\bedrock\bedrock\main.cpp(196): warning C4101: 'r3' : unreferenced local variable
+     1>d:\local disk e\software\visual studio projects\bedrock\bedrock\main.cpp(380): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
        Link:
          D:\Local Disk E\Software\Visual Studio Express 2013\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.exe" /INCREMENTAL /NOLOGO /LIBPATH:"D:\Local Disk E\Software\Visual Studio Projects\SDL2_ttf-devel-2.0.14-VC\lib\x86" /LIBPATH:"D:\Local Disk E\Software\Visual Studio Projects\SDL2_image-devel-2.0.1-VC\lib\x86" /LIBPATH:"D:\Local Disk E\Software\Visual Studio Projects\SDL2-devel-2.0.4-VC\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Local Disk E\Software\Visual Studio Projects\bedrock\Debug\bedrock.lib" /MACHINE:X86 Debug\CActor.obj
          Debug\CEnemy.obj
@@ -18,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.74
+Time Elapsed 00:00:00.93

@@ -6,10 +6,9 @@ CTexture::CTexture()
 {
 }
 
-CTexture::CTexture(SDL_Renderer* r, SDL_PixelFormat* f, int w, int h)
+CTexture::CTexture(SDL_Renderer* r, int w, int h)
 {
 	gRenderer = r;
-	format = f;
 	mWidth = w;
 	mHeight = h;
 	mTexture = NULL;
@@ -81,11 +80,16 @@ SDL_Color CTexture::sampleTexture(int x, int y)
 	if (bpp != 4)
 		printf_s("WARNING: Surface is not 32bpp.\n");
 
-	Uint32 p = *(Uint32*)mSurface->pixels + y * mSurface->pitch + x * bpp;	
+	Uint8* px = (Uint8*)mSurface->pixels + y * mSurface->pitch + x * bpp;	
+	Uint32 p = *(Uint32*)px;
+
 	SDL_UnlockSurface(mSurface);
 
 	Uint8 r, g, b, a;
-	SDL_PixelFormat* format = mSurface->format;
+
+	SDL_GetRGBA(p, mSurface->format, &r, &g, &b, &a);
+	
+	/*SDL_PixelFormat* format = mSurface->format;
 	Uint32 temp = p & format->Rmask;
 	temp = temp >> format->Rshift;
 	temp = temp << format->Rloss;
@@ -101,17 +105,7 @@ SDL_Color CTexture::sampleTexture(int x, int y)
 	temp = p & format->Amask;
 	temp = temp >> format->Ashift;
 	temp = temp << format->Aloss;
-	a = (Uint8)temp;
-
-	if (a > 0 && a < 255)
-	{
-		printf_s("invalpha");
-	}
-
-	if ((r > 0 || g > 0 || b > 0) && a == 255)
-	{
-		printf_s("colhit");
-	}
+	a = (Uint8)temp;*/
 
 	col = { r, g, b, a };
 

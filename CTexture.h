@@ -6,7 +6,6 @@ class CTexture
 {
 public:
 	SDL_Renderer* gRenderer;
-	SDL_PixelFormat* format;
 	SDL_Texture* mTexture;
 	SDL_Surface* mSurface;
 	SDL_Rect renderQuad;
@@ -14,7 +13,7 @@ public:
 
 public:
 	CTexture();
-	CTexture(SDL_Renderer*, SDL_PixelFormat*, int, int);
+	CTexture(SDL_Renderer*, int, int);
 	~CTexture();
 	bool loadFromFile(char*);
 	void free();
