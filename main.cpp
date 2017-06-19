@@ -225,8 +225,8 @@ int main(int argc, char ** argv)
 		SDL_RenderPresent(gRenderer);
 
 		
-		//en1.process(&gPlayer,wMap);
-		//en2.process(&gPlayer,wMap);
+		en1.process(&gPlayer,wMap);
+		en2.process(&gPlayer,wMap);
 
 		gFrameInfo.timeOld = gFrameInfo.time;
 		gFrameInfo.time = SDL_GetTicks();
@@ -446,7 +446,16 @@ void drawFrame()
 		sprZ[i] = magnitude(gFrameInfo.pos - sprite[i]->pos);
 	}
 
-	//sort
+	if (sprZ[0] > sprZ[1])
+	{
+		sprOrder[0] = 0;
+		sprOrder[1] = 1;
+	}
+	else
+	{
+		sprOrder[0] = 1;
+		sprOrder[1] = 0;
+	}
 	
 	for (int i = 0; i < numSprites; i++)
 	{
@@ -476,11 +485,6 @@ void drawFrame()
 		if (endX >= SCREEN_W)
 			endX = SCREEN_W - 1;
 
-		if (i == 0 && transform.y > 0)
-		{
-			//printf_s("sfsf");
-		}
-
 		for (int str = startX; str < endX; str++)
 		{
 			//int tX = int(256 * (str - (sprScreenX - sprW / 2) * TEX_WIDTH / sprW)) / 256;
@@ -496,9 +500,9 @@ void drawFrame()
 				for (int y = startY; y < endY; y++)
 				{
 					int t = y * 256 - SCREEN_H * 128 + sprH * 128;
-					int tY = ((t * TEX_HEIGHT) / sprH) / 256;
+					//int tY = ((t * TEX_HEIGHT) / sprH) / 256;
+					int tY = (t * TEX_HEIGHT / sprH) / 256;
 					SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
-					//col = { 255, 255, 255, 255 };
 					if (col.a > 0)
 					{
 						SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
