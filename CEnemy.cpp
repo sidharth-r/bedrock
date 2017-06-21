@@ -1,7 +1,12 @@
 #include "CEnemy.h"
 
-CEnemy::CEnemy(SFrameInfo* f, CTexture* tex, int a, int b) : CActor(f, tex, a, b)
+CEnemy::CEnemy()
 {
+}
+
+CEnemy::CEnemy(unsigned int i, SFrameInfo* f, CTexture* tex, int a, int b) : CActor(i, f, tex, a, b)
+{
+	id = i;
 	attTimer = 0;
 }
 

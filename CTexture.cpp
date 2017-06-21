@@ -67,14 +67,15 @@ void CTexture::offsetXY(int x, int y)
 	renderQuad.y = y - renderQuad.h / 2;
 }
 
-SDL_Color CTexture::sampleTexture(int x, int y)
+Uint32 CTexture::sampleTexture(int x, int y)
 {
 	SDL_Color col = { 0, 0, 0, 255 };
 
 	if (SDL_LockSurface(mSurface) == -1)
 	{
 		printf_s("ERROR: Could not lock surface.");
-		return col;
+		//return col;
+		return 0;
 	}
 	int bpp = mSurface->format->BytesPerPixel;
 	if (bpp != 4)
@@ -109,5 +110,6 @@ SDL_Color CTexture::sampleTexture(int x, int y)
 
 	col = { r, g, b, a };
 
-	return col;
+	//return col;
+	return p;
 }

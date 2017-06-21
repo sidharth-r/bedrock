@@ -4,8 +4,9 @@ CEntity::CEntity()
 {
 }
 
-CEntity::CEntity(SFrameInfo* f)
+CEntity::CEntity(unsigned int i, SFrameInfo* f)
 {
+	id = i;
 	FrameInfo = f;
 }
 

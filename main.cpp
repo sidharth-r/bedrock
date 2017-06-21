@@ -9,6 +9,7 @@
 #include "CActor.h"
 #include "CEnemy.h"
 #include "CPlayer.h"
+#include "SFrameBuffer.h"
 #include "SFrameInfo.h"
 #include "vmath.h"
 
@@ -57,8 +58,9 @@ SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 
 
 CPlayer gPlayer(&gFrameInfo);
 
-CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
-CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
+//CEnemy en1(2, &gFrameInfo, gSpriteEn, 5, 5);
+//CEnemy en2(3, &gFrameInfo, gSpriteEn2, 4, 1);
+CEnemy en1, en2;
 
 bool f = false;
 /*
@@ -181,10 +183,12 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	CEnemy e1(&gFrameInfo, gSpriteEn, 6, 5);
-	en1 = e1;
-	CEnemy e2(&gFrameInfo, gSpriteEn2, 5, 2);
-	en2 = e2;
+	fInitBuffer(gRenderer, &gFrameInfo.frameBuffer);
+
+	en1 = CEnemy(2,&gFrameInfo, gSpriteEn, 6, 5);
+	//en1 = e1;
+	en2 = CEnemy(3,&gFrameInfo, gSpriteEn2, 5, 2);
+	//en2 = e2;
 
 	bool fQuit = false;
 	SDL_Event sdlEvt;
@@ -221,6 +225,8 @@ int main(int argc, char ** argv)
 			SDL_SetRenderDrawColor(gRenderer, Color.red.r / 2, Color.red.g, Color.red.b, Color.red.a);
 			SDL_RenderClear(gRenderer);
 		}
+
+		fDrawBuffer(gRenderer, &gFrameInfo.frameBuffer);
 
 		SDL_RenderPresent(gRenderer);
 
@@ -497,13 +503,15 @@ void drawFrame()
 				{
 					int t = y * 256 - SCREEN_H * 128 + sprH * 128;
 					int tY = ((t * TEX_HEIGHT) / sprH) / 256;
-					SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
+					//SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
+					Uint32 p = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
 					//col = { 255, 255, 255, 255 };
-					if (col.a > 0)
+					/*if (col.a > 0)
 					{
 						SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
 						SDL_RenderDrawPoint(gRenderer, str, y);
-					}
+					}*/
+					fDraw_point(&gFrameInfo.frameBuffer, str, y, p, i + 2);
 				}
 			}
 		}
