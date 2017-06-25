@@ -516,8 +516,6 @@ void drawFrame()
 					Uint32 p = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
 					Uint8 a = sprite[sprOrder[i]]->texture->sampleAlpha(tX, tY);
 					if (a > 0)
-					SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
-					if (col.a > 0)
 					{
 						fDraw_point(&gFrameInfo.frameBuffer, str, y, p, i + 2);
 					}
