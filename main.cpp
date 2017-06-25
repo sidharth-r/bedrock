@@ -557,7 +557,7 @@ bool init()
 bool loadData(char* mapFile)
 {
 	gSpriteEn = new CTexture(gRenderer, 256, 256);
-	if (!gSpriteEn->loadFromFile("en4.png"))
+	if (!gSpriteEn->loadFromFile("en2large.png"))
 		return false;
 
 	gSpriteEn2 = new CTexture(gRenderer, 256, 256);
