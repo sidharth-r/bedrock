@@ -522,8 +522,25 @@ bool init()
 		return false;
 	}
 
-	if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)
+	/*if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)
+		return false;*/
+	gWindow = SDL_CreateWindow(G_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, 0);
+	if (!gWindow)
+	{
+		printf_s("SDL_ERROR: Could not create window.\n%s\n", SDL_GetError());
 		return false;
+	}
+
+	gRenderer = SDL_CreateSoftwareRenderer(SDL_GetWindowSurface(gWindow));
+	if (!gRenderer)
+	{
+		printf_s("SDL_ERROR: Could not create renderer.\n%s\n", SDL_GetError());
+		return false;
+	}
+
+	gFrameInfo.renderer = gRenderer;
+	gFrameInfo.window = gWindow;
+
 	SDL_SetWindowGrab(gWindow, SDL_TRUE);
 
 	if (!IMG_Init(IMG_INIT_PNG))
