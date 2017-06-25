@@ -32,10 +32,10 @@
 *.app
 
 #Debug files
-.idb
-.pdb
-.orig
-.tlog
+*.idb
+*.pdb
+*.orig
+*.tlog
 
 #data files
 *.png
