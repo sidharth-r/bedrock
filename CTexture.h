@@ -21,4 +21,5 @@ public:
 	void resizeQuad(double scale);
 	void offsetXY(int, int);
 	Uint32 sampleTexture(int, int);
+	Uint8 sampleAlpha(int, int);
 };

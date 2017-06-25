@@ -113,3 +113,33 @@ Uint32 CTexture::sampleTexture(int x, int y)
 	//return col;
 	return p;
 }
+
+Uint8 CTexture::sampleAlpha(int x, int y)
+{
+	if (SDL_LockSurface(mSurface) == -1)
+	{
+		printf_s("ERROR: Could not lock surface.");
+		//return col;
+		return 255;
+	}
+	int bpp = mSurface->format->BytesPerPixel;
+	if (bpp != 4)
+		printf_s("WARNING: Surface is not 32bpp.\n");
+
+	Uint8* px = (Uint8*)mSurface->pixels + y * mSurface->pitch + x * bpp;
+	Uint32 p = *(Uint32*)px;
+
+	SDL_UnlockSurface(mSurface);
+
+	Uint8 r, g, b, a;
+
+	SDL_GetRGBA(p, mSurface->format, &r, &g, &b, &a);
+
+	SDL_PixelFormat* format = mSurface->format;
+	Uint32 temp = p & format->Amask;
+	temp = temp >> format->Ashift;
+	temp = temp << format->Aloss;
+	a = (Uint8)temp;
+
+	return a;
+}

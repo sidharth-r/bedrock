@@ -21,12 +21,12 @@ struct SFrameBuffer
 {
 	SPixel pixelData[SCREEN_H][SCREEN_W];
 	Uint32 pixel[SCREEN_H][SCREEN_W];
-	SDL_Texture* bufTexture;
+	SDL_Surface* screenBuffer;
 };
 
-bool fInitBuffer(SDL_Renderer*, SFrameBuffer*);
+bool fInitBuffer(SDL_Window*, SFrameBuffer*);
 
 void fDraw_line_v(SFrameBuffer* frameBuffer, int x, int start, int end, Uint32 pixel, int id);
 void fDraw_point(SFrameBuffer* frameBuffer, int x, int y, Uint32 pixel, int id);
 
-void fDrawBuffer(SDL_Renderer*, SFrameBuffer*);
+void fDrawBuffer(SDL_Window*, SFrameBuffer*);

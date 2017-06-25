@@ -183,7 +183,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	fInitBuffer(gRenderer, &gFrameInfo.frameBuffer);
+	fInitBuffer(gWindow, &gFrameInfo.frameBuffer);
 
 	en1 = CEnemy(2,&gFrameInfo, gSpriteEn, 6, 5);
 	//en1 = e1;
@@ -193,7 +193,7 @@ int main(int argc, char ** argv)
 	bool fQuit = false;
 	SDL_Event sdlEvt;
 
-	//SDL_Window* w2 = SDL_CreateWindow("2", 200, 200, 256, 256, 0);
+	//SDL_Window* w2 = SDL_CreateWindow("2", 0, 0, 800, 600, 0);
 	//SDL_Surface* s = SDL_LoadBMP("ena.bmp");
 
 	SDL_Window* w3;
@@ -226,11 +226,11 @@ int main(int argc, char ** argv)
 			SDL_RenderClear(gRenderer);
 		}
 
-		fDrawBuffer(gRenderer, &gFrameInfo.frameBuffer);
-
-		SDL_RenderPresent(gRenderer);
-
+		fDrawBuffer(gWindow, &gFrameInfo.frameBuffer);
+		//fDrawBuffer(w2, &gFrameInfo.frameBuffer);
 		
+		//SDL_RenderPresent(gRenderer);
+				
 		//en1.process(&gPlayer,wMap);
 		//en2.process(&gPlayer,wMap);
 
@@ -453,7 +453,7 @@ void drawFrame()
 	}
 
 	//sort
-	
+	SDL_LockSurface(gFrameInfo.frameBuffer.screenBuffer);
 	for (int i = 0; i < numSprites; i++)
 	{
 		vec2d dir = gFrameInfo.dir, plane = gFrameInfo.plane, pos = gFrameInfo.pos;
@@ -503,19 +503,17 @@ void drawFrame()
 				{
 					int t = y * 256 - SCREEN_H * 128 + sprH * 128;
 					int tY = ((t * TEX_HEIGHT) / sprH) / 256;
-					//SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
 					Uint32 p = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
-					//col = { 255, 255, 255, 255 };
-					/*if (col.a > 0)
+					Uint8 a = sprite[sprOrder[i]]->texture->sampleAlpha(tX, tY);
+					if (a > 0)
 					{
-						SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
-						SDL_RenderDrawPoint(gRenderer, str, y);
-					}*/
-					fDraw_point(&gFrameInfo.frameBuffer, str, y, p, i + 2);
+						fDraw_point(&gFrameInfo.frameBuffer, str, y, p, i + 2);
+					}
 				}
 			}
 		}
 	}
+	SDL_UnlockSurface(gFrameInfo.frameBuffer.screenBuffer);
 }
 
 bool init()
@@ -526,8 +524,25 @@ bool init()
 		return false;
 	}
 
-	if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)
+	/*if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)
+	return false;*/
+	gWindow = SDL_CreateWindow(G_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, 0);
+	if (!gWindow)
+	{
+		printf_s("SDL_ERROR: Could not create window.\n%s\n", SDL_GetError());
 		return false;
+	}
+
+	gRenderer = SDL_CreateSoftwareRenderer(SDL_GetWindowSurface(gWindow));
+	if (!gRenderer)
+	{
+		printf_s("SDL_ERROR: Could not create renderer.\n%s\n", SDL_GetError());
+		return false;
+	}
+
+	gFrameInfo.renderer = gRenderer;
+	gFrameInfo.window = gWindow;
+
 	SDL_SetWindowGrab(gWindow, SDL_TRUE);
 
 	if (!IMG_Init(IMG_INIT_PNG))
