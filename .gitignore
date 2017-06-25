@@ -26,6 +26,12 @@
 *.a
 *.lib
 
+#Debug files
+*.idb
+*.pdb
+*.orig
+*.tlog
+
 # Executables
 *.exe
 *.out
