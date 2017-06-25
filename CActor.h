@@ -10,7 +10,8 @@ class CActor : public CEntity
 #endif
 public:
 	CTexture* texture;
-	CActor(SFrameInfo*,CTexture*,int,int);
+	CActor();
+	CActor(unsigned int, SFrameInfo*, CTexture*, int, int);
 	~CActor();
 	void draw();
 #ifdef _DEBUG

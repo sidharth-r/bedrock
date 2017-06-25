@@ -9,6 +9,7 @@
 #include "CActor.h"
 #include "CEnemy.h"
 #include "CPlayer.h"
+#include "SFrameBuffer.h"
 #include "SFrameInfo.h"
 #include "vmath.h"
 
@@ -57,8 +58,9 @@ SFrameInfo gFrameInfo = { SCREEN_W, SCREEN_H, { 4, 3 }, { -1, 0 }, { 0, 1 }, 0, 
 
 CPlayer gPlayer(&gFrameInfo);
 
-CEnemy en1(&gFrameInfo, gSpriteEn, 5, 5);
-CEnemy en2(&gFrameInfo, gSpriteEn2, 4, 1);
+//CEnemy en1(2, &gFrameInfo, gSpriteEn, 5, 5);
+//CEnemy en2(3, &gFrameInfo, gSpriteEn2, 4, 1);
+CEnemy en1, en2;
 
 bool f = false;
 /*
@@ -181,15 +183,17 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	CEnemy e1(&gFrameInfo, gSpriteEn, 6, 5);
-	en1 = e1;
-	CEnemy e2(&gFrameInfo, gSpriteEn2, 5, 2);
-	en2 = e2;
+	fInitBuffer(gWindow, &gFrameInfo.frameBuffer);
+
+	en1 = CEnemy(2,&gFrameInfo, gSpriteEn, 6, 5);
+	//en1 = e1;
+	en2 = CEnemy(3,&gFrameInfo, gSpriteEn2, 5, 2);
+	//en2 = e2;
 
 	bool fQuit = false;
 	SDL_Event sdlEvt;
 
-	//SDL_Window* w2 = SDL_CreateWindow("2", 200, 200, 256, 256, 0);
+	//SDL_Window* w2 = SDL_CreateWindow("2", 0, 0, 800, 600, 0);
 	//SDL_Surface* s = SDL_LoadBMP("ena.bmp");
 
 	SDL_Window* w3;
@@ -222,11 +226,13 @@ int main(int argc, char ** argv)
 			SDL_RenderClear(gRenderer);
 		}
 
-		SDL_RenderPresent(gRenderer);
-
+		fDrawBuffer(gWindow, &gFrameInfo.frameBuffer);
+		//fDrawBuffer(w2, &gFrameInfo.frameBuffer);
 		
-		en1.process(&gPlayer,wMap);
-		en2.process(&gPlayer,wMap);
+		//SDL_RenderPresent(gRenderer);
+				
+		//en1.process(&gPlayer,wMap);
+		//en2.process(&gPlayer,wMap);
 
 		gFrameInfo.timeOld = gFrameInfo.time;
 		gFrameInfo.time = SDL_GetTicks();
@@ -456,7 +462,7 @@ void drawFrame()
 		sprOrder[0] = 1;
 		sprOrder[1] = 0;
 	}
-	
+	SDL_LockSurface(gFrameInfo.frameBuffer.screenBuffer);
 	for (int i = 0; i < numSprites; i++)
 	{
 		vec2d dir = gFrameInfo.dir, plane = gFrameInfo.plane, pos = gFrameInfo.pos;
@@ -485,6 +491,11 @@ void drawFrame()
 		if (endX >= SCREEN_W)
 			endX = SCREEN_W - 1;
 
+		if (i == 0 && transform.y > 0)
+		{
+			//printf_s("sfsf");
+		}
+
 		for (int str = startX; str < endX; str++)
 		{
 			//int tX = int(256 * (str - (sprScreenX - sprW / 2) * TEX_WIDTH / sprW)) / 256;
@@ -502,16 +513,19 @@ void drawFrame()
 					int t = y * 256 - SCREEN_H * 128 + sprH * 128;
 					//int tY = ((t * TEX_HEIGHT) / sprH) / 256;
 					int tY = (t * TEX_HEIGHT / sprH) / 256;
+					Uint32 p = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
+					Uint8 a = sprite[sprOrder[i]]->texture->sampleAlpha(tX, tY);
+					if (a > 0)
 					SDL_Color col = sprite[sprOrder[i]]->texture->sampleTexture(tX, tY);
 					if (col.a > 0)
 					{
-						SDL_SetRenderDrawColor(gRenderer, col.r, col.g, col.b, col.a);
-						SDL_RenderDrawPoint(gRenderer, str, y);
+						fDraw_point(&gFrameInfo.frameBuffer, str, y, p, i + 2);
 					}
 				}
 			}
 		}
 	}
+	SDL_UnlockSurface(gFrameInfo.frameBuffer.screenBuffer);
 }
 
 bool init()
@@ -522,7 +536,7 @@ bool init()
 		return false;
 	}
 
-	/*if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)
+	/*if (SDL_CreateWindowAndRenderer(SCREEN_W, SCREEN_H, 0, &gWindow, &gRenderer) != 0)s
 		return false;*/
 	gWindow = SDL_CreateWindow(G_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H, 0);
 	if (!gWindow)
@@ -555,7 +569,7 @@ bool init()
 bool loadData(char* mapFile)
 {
 	gSpriteEn = new CTexture(gRenderer, 256, 256);
-	if (!gSpriteEn->loadFromFile("en4.png"))
+	if (!gSpriteEn->loadFromFile("en2large.png"))
 		return false;
 
 	gSpriteEn2 = new CTexture(gRenderer, 256, 256);

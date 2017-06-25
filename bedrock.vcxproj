@@ -83,6 +83,7 @@
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="rmath.cpp" />
+    <ClCompile Include="SFrameBuffer.cpp" />
     <ClCompile Include="vmath.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +93,7 @@
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="rmath.h" />
+    <ClInclude Include="SFrameBuffer.h" />
     <ClInclude Include="SFrameInfo.h" />
     <ClInclude Include="vmath.h" />
   </ItemGroup>

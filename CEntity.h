@@ -7,9 +7,10 @@ class CEntity
 {
 public:
 	CEntity();
-	CEntity(SFrameInfo*);
+	CEntity(unsigned int, SFrameInfo*);
 	~CEntity();
 	vmath::vec2d pos;
 	SFrameInfo* FrameInfo;
+	unsigned int id;
 };
 

@@ -7,7 +7,8 @@ class CEnemy : public CActor
 {
 	double attTimer;
 public:
-	CEnemy(SFrameInfo*, CTexture*, int, int);
+	CEnemy();
+	CEnemy(unsigned int, SFrameInfo*, CTexture*, int, int);
 	~CEnemy();
 	void process(CPlayer*,vector<vector<int>>&);
 };

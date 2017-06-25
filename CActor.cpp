@@ -1,8 +1,14 @@
 #include "CActor.h"
 #include <math.h>
 
-CActor::CActor(SFrameInfo* f,CTexture* tex , int a, int b)
+CActor::CActor()
 {
+
+}
+
+CActor::CActor(unsigned int i, SFrameInfo* f,CTexture* tex , int a, int b)
+{
+	id = i;
 	FrameInfo = f;
 	texture = tex;
 	pos.x = a;
